@@ -1,5 +1,8 @@
+@file:Suppress("DEPRECATION")
+
 package com.my_domain.notes
 
+import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -34,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun LoadQuery(title: String) {
-        var dbManager = DbManager(this)
+        val dbManager = DbManager(this)
         val projections = arrayOf("ID", "Title", "Description")
         val selectionArgs = arrayOf(title)
         val cursor = dbManager.Query(projections, "Title like ?", selectionArgs, "Title")
@@ -103,16 +106,11 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    inner class MyNotesAdapter : BaseAdapter {
-        var listNotesAdapter = ArrayList<Note>()
-        var context: Context? = null
-
-        constructor(context: Context, listNotesAdapter: ArrayList<Note>) : super() {
-            this.listNotesAdapter = listNotesAdapter
-            this.context = context
-        }
+    inner class MyNotesAdapter(context: Context, var listNotesAdapter: ArrayList<Note>) : BaseAdapter() {
+        var context: Context? = context
 
 
+        @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             //inflate layout row.xml
             var myView = layoutInflater.inflate(R.layout.row, null)
@@ -174,7 +172,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun GoToUpdateFun(myNote: Note) {
-        var intent = Intent(this, AddNoteActivity::class.java)
+        val intent = Intent(this, AddNoteActivity::class.java)
         intent.putExtra("ID", myNote.nodeID) //put id
         intent.putExtra("name", myNote.nodeName) //ut name
         intent.putExtra("des", myNote.nodeDes) //put description

@@ -2,7 +2,6 @@ package com.my_domain.notes
 
 import android.content.ContentValues
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.view.View
 import android.widget.Toast
@@ -19,40 +18,38 @@ class AddNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_note)
 
         try {
-            val bundle:Bundle = intent.extras
-            id = bundle.getInt("ID", 0)
-            if (id!=0){
+            val bundle: Bundle? = intent.extras
+            id = bundle!!.getInt("ID", 0)
+            if (id != 0) {
                 titleEt.setText(bundle.getString("name"))
                 descEt.setText(bundle.getString("des"))
             }
-        }catch (ex:Exception){}
+        } catch (ex: Exception) {
+        }
     }
 
     fun addFunc(view: View){
-        var dbManager = DbManager(this)
+        val dbManager = DbManager(this)
 
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("Title", titleEt.text.toString())
         values.put("Description", descEt.text.toString())
 
-        if (id ==0){
+        if (id == 0) {
             val ID = dbManager.insert(values)
-            if (ID>0){
+            if (ID > 0) {
                 Toast.makeText(this, "Note is added", Toast.LENGTH_SHORT).show()
                 finish()
-            }
-            else{
+            } else {
                 Toast.makeText(this, "Error adding note...", Toast.LENGTH_SHORT).show()
             }
-        }
-        else{
-            var selectionArgs = arrayOf(id.toString())
+        } else {
+            val selectionArgs = arrayOf(id.toString())
             val ID = dbManager.update(values, "ID=?", selectionArgs)
-            if (ID>0){
+            if (ID > 0) {
                 Toast.makeText(this, "Note is added", Toast.LENGTH_SHORT).show()
                 finish()
-            }
-            else{
+            } else {
                 Toast.makeText(this, "Error adding note...", Toast.LENGTH_SHORT).show()
             }
         }
